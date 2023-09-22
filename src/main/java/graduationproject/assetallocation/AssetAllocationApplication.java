@@ -1,16 +1,15 @@
 package graduationproject.assetallocation;
 
-import graduationproject.assetallocation.repository.AssetRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @RequiredArgsConstructor
-public class AssetallocationApplication {
+public class AssetAllocationApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AssetallocationApplication.class, args);
+		SpringApplication.run(AssetAllocationApplication.class, args);
 
 
 	}

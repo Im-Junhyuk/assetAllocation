@@ -9,11 +9,11 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SAADTO {
+public class SaaDTO {
 
     String name;
     Long memberId;
-    List<AAAssetDTO> aAAssets;
+    List<AaAssetDTO> aAAssets;
     String startDay;
     String endDay;
     Long initialCash;

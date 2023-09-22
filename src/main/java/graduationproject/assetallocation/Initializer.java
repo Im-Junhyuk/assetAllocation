@@ -1,9 +1,7 @@
 package graduationproject.assetallocation;
 
 import graduationproject.assetallocation.domain.Asset;
-import graduationproject.assetallocation.domain.aa.AA;
 import graduationproject.assetallocation.repository.AssetRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component

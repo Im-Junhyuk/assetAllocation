@@ -1,19 +1,17 @@
 package graduationproject.assetallocation.repository;
 
-import graduationproject.assetallocation.domain.aa.AA;
+import graduationproject.assetallocation.domain.aa.Aa;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 @RequiredArgsConstructor
-public class AAJpaRepository {
+public class AaJpaRepository {
 
     private final EntityManager em;
 
-    public void save(AA aA){
+    public void save(Aa aA){
         if(aA.getId() == null) {
             em.persist(aA);
         }
@@ -26,8 +24,8 @@ public class AAJpaRepository {
         em.remove(findById(aAId));
     }
 
-    public AA findById(Long aAId){
-        return em.find(AA.class, aAId);
+    public Aa findById(Long aAId){
+        return em.find(Aa.class, aAId);
     }
     // user_id를 어떻게 받는가?
 //    public AA findByName(String name){

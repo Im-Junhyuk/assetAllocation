@@ -16,7 +16,7 @@ import java.util.List;
 public class AdminController {
     private final AssetRepository assetRepository;
 
-    @GetMapping("/Assets")
+    @GetMapping("/assets")
     List<Asset> findAll(){
         log.info("findAllAsset");
         return assetRepository.findAll();

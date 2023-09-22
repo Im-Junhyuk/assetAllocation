@@ -1,6 +1,6 @@
 package graduationproject.assetallocation.domain.aa;
 
-import graduationproject.assetallocation.domain.AAAsset;
+import graduationproject.assetallocation.domain.AaAsset;
 import graduationproject.assetallocation.domain.Member;
 import graduationproject.assetallocation.domain.RebalancingPeriod;
 import jakarta.persistence.*;
@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
-public abstract class AA {
+public abstract class Aa {
     @Id @GeneratedValue
     @Column(name = "AA_ID")
     private Long id;
@@ -38,8 +37,8 @@ public abstract class AA {
 
     private String endDay;
 
-    @OneToMany(mappedBy = "aA", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AAAsset> aAAssets = new ArrayList<>();
+    @OneToMany(mappedBy = "aa", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AaAsset> aaAssets = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
@@ -51,9 +50,9 @@ public abstract class AA {
         this.member = member;
     }
 
-    public void addAAAsset(AAAsset aaAsset){
-        this.aAAssets.add(aaAsset);
-        aaAsset.setAA(this);
+    public void addAaAsset(AaAsset aaAsset){
+        this.aaAssets.add(aaAsset);
+        aaAsset.setAa(this);
     }
     public void setCreatedTime(){
         this.setCreatedTime(LocalDateTime.now());
@@ -63,7 +62,7 @@ public abstract class AA {
         this.setLastModifiedTime(LocalDateTime.now());
     }
 
-    public static AA createAA() {
+    public static Aa createAA() {
         return null;
     }
 }

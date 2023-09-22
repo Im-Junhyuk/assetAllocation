@@ -1,6 +1,6 @@
 package graduationproject.assetallocation.domain;
 
-import graduationproject.assetallocation.domain.aa.AA;
+import graduationproject.assetallocation.domain.aa.Aa;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Entity
 @Getter @Setter
 @NoArgsConstructor
-public class AAAsset {
+public class AaAsset {
 
     @Id @GeneratedValue
     @Column(name = "AAASSET_ID")
@@ -19,7 +19,7 @@ public class AAAsset {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "AA_ID")
-    private AA aA;
+    private Aa aa;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ASSET_ID")
@@ -28,15 +28,15 @@ public class AAAsset {
     private String assetName;
 
     // creation method
-    public static AAAsset createAAAsset(Asset asset, int rate){
-        AAAsset aAAsset = new AAAsset();
-        setAsset(asset, rate, aAAsset);
+    public static AaAsset createAaAsset(Asset asset, int rate){
+        AaAsset aaAsset = new AaAsset();
+        setAsset(asset, rate, aaAsset);
 
-        return aAAsset;
+        return aaAsset;
     }
 
     // relation method
-    private static void setAsset(Asset asset, int rate, AAAsset aAAsset) {
+    private static void setAsset(Asset asset, int rate, AaAsset aAAsset) {
         aAAsset.setAsset(asset);
         aAAsset.setAssetName(asset.getName());
         aAAsset.setRate(rate);

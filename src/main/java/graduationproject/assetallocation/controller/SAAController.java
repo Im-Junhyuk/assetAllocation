@@ -2,16 +2,12 @@ package graduationproject.assetallocation.controller;
 
 import graduationproject.assetallocation.domain.Member;
 import graduationproject.assetallocation.domain.RebalancingPeriod;
-import graduationproject.assetallocation.domain.aa.AA;
-import graduationproject.assetallocation.domain.aa.SAA;
-import graduationproject.assetallocation.domain.dto.AAAssetDTO;
-import graduationproject.assetallocation.domain.dto.SAADTO;
-import graduationproject.assetallocation.service.AAService;
+import graduationproject.assetallocation.domain.aa.Aa;
+import graduationproject.assetallocation.domain.aa.Saa;
+import graduationproject.assetallocation.domain.dto.SaaDTO;
+import graduationproject.assetallocation.service.AaService;
 import graduationproject.assetallocation.service.MemberService;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,17 +18,16 @@ import java.util.*;
 @Slf4j
 public class SAAController {
 
-    private final AAService aAService;
-
+    private final AaService aaService;
     private final MemberService memberService;
 
 //    private final AARepository aARepository;
 
-    @GetMapping("/SAA/read/{id}")
+    @GetMapping("/saa/read/{id}")
     public Map<String, Object> findById(@PathVariable Long id){
 
         Map<String, Object> response = new HashMap<>();
-        Optional<AA> findAA = aAService.findById(id);
+        Optional<Aa> findAA = aaService.findById(id);
         if (findAA.isPresent()){
             response.put("1", findAA.get());
         }
@@ -43,49 +38,49 @@ public class SAAController {
         return response;
     }
 
-    @GetMapping("/SAAs/{userId}")
-    public List<AA> findAllByUserId(@PathVariable Long userId){
+    @GetMapping("/saas/{userId}")
+    public List<Aa> findAllByUserId(@PathVariable Long userId){
         Member member = memberService.findById(userId).get();
-        List<AA> list = aAService.findByMember(member);
+        List<Aa> list = aaService.findByMember(member);
         return list;
     }
 
 
-    @GetMapping("/SAAs")
-    public List<AA> findAll(){
-        List<AA> list = aAService.findAll();
+    @GetMapping("/saas")
+    public List<Aa> findAll(){
+        List<Aa> list = aaService.findAll();
         return list;
     }
-    @PostMapping("/SAA/save")
-    public String saveSAA(@RequestBody SAADTO sAADTO){
+    @PostMapping("/saa/save")
+    public String saveSAA(@RequestBody SaaDTO sAADTO){
         log.info("createSAA Controller");
 
         Member member = memberService.findById(sAADTO.getMemberId()).get();
         RebalancingPeriod rebalancingPeriodEnum = RebalancingPeriod.valueOf(sAADTO.getRebalancingPeriod());
-        long sAAId = aAService.createSAA(sAADTO.getName(), member, sAADTO.getAAAssets(),
+        long sAAId = aaService.createSAA(sAADTO.getName(), member, sAADTO.getAAAssets(),
                 sAADTO.getStartDay(), sAADTO.getEndDay(), sAADTO.getInitialCash(),
                 rebalancingPeriodEnum);
         //save(sAA);
         return Long.toString(sAAId);
     }
 
-    @PostMapping("/SAA/check")
-    public SAADTO check(@RequestBody SAADTO sAADTO){
-        return sAADTO;
+    @PostMapping("/saa/check")
+    public SaaDTO check(@RequestBody SaaDTO saaDTO){
+        return saaDTO;
     }
 
-    private void save(SAA sAA) {
-        if (sAA.getId() == null){
-            aAService.setCreateTime(sAA);
+    private void save(Saa saa) {
+        if (saa.getId() == null){
+            aaService.setCreateTime(saa);
         }
         else{
-            aAService.setLastModifiedTime(sAA);;
+            aaService.setLastModifiedTime(saa);;
         }
-        aAService.save(sAA);
+        aaService.save(saa);
     }
 
-    @PostMapping("SAA/delete/{id}")
+    @PostMapping("saa/delete/{id}")
     public void deleteOne(@PathVariable Long id){
-        aAService.deleteById(id);
+        aaService.deleteById(id);
     }
 }

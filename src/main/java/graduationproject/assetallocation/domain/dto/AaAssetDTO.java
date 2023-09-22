@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class AAAssetDTO {
+public class AaAssetDTO {
     String assetName;
 
     int rate;

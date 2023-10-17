@@ -1,11 +1,20 @@
 package graduationproject.assetallocation.service;
 
+import com.sun.jdi.request.DuplicateRequestException;
+import graduationproject.assetallocation.domain.Authority;
 import graduationproject.assetallocation.domain.Member;
+import graduationproject.assetallocation.domain.dto.MemberDTO;
+import graduationproject.assetallocation.exception.NotFoundMemberException;
 import graduationproject.assetallocation.repository.MemberRepository;
+import graduationproject.assetallocation.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +23,41 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    @Transactional
+    public void signup(MemberDTO memberDTO){
+        if(memberRepository.findByLoginId(memberDTO.getLoginId()).orElse(null) != null){
+            throw new DuplicateRequestException("There is a same name.");
+        }
+
+        Authority authority = Authority.builder()
+                .authorityName("ROLE_USER")
+                .build();
+
+        Member member = Member.builder()
+                .loginId(memberDTO.getLoginId())
+                .password(passwordEncoder.encode(memberDTO.getPassword()))
+                .authorities(Collections.singleton(authority))
+                .build();
+
+        memberRepository.save(member);
+    }
+
+    @Transactional(readOnly = true)
+    public MemberDTO getMemberWithAuthorities(String loginId){
+        return MemberDTO.from(memberRepository.findOneWithAuthoritiesByLoginId(loginId).orElse(null));
+    }
+
+    @Transactional(readOnly = true)
+    public MemberDTO getMyMemberWithAuthorities(){
+        return MemberDTO.from(
+                SecurityUtil.getCurrentLoginId()
+                        .flatMap(memberRepository::findOneWithAuthoritiesByLoginId)
+                        .orElseThrow(() -> new NotFoundMemberException("Member not found"))
+        );
+    }
+
     public void saveMember(Member member){
 
         memberRepository.save(member);

@@ -1,9 +1,11 @@
 package graduationproject.assetallocation.domain.aa;
 
 import graduationproject.assetallocation.domain.AaAsset;
+import graduationproject.assetallocation.domain.Authority;
 import graduationproject.assetallocation.domain.Member;
 import graduationproject.assetallocation.domain.RebalancingPeriod;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,10 +13,11 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
 public abstract class Aa {

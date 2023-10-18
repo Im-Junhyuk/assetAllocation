@@ -24,12 +24,13 @@ public class MemberController {
         return "ok";
     }
 
-    @ResponseBody
-    @PostMapping("/delete/{memberId}")
-    public String deleteMember(@PathVariable Long memberId){
-        memberService.deleteMember(memberId);
-        return "ok";
-    }
+//    @ResponseBody
+//    @PostMapping("/delete")
+//    public String deleteMember(){
+//        Long memberId =
+//        memberService.deleteMember(memberId);
+//        return "ok";
+//    }
 
     @ResponseBody
     @GetMapping("/{memberId}")

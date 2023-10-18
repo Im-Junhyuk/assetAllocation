@@ -39,11 +39,31 @@ public class MemberService {
                 .loginId(memberDTO.getLoginId())
                 .password(passwordEncoder.encode(memberDTO.getPassword()))
                 .authorities(Collections.singleton(authority))
+                .joinDay(LocalDateTime.now())
                 .build();
 
         memberRepository.save(member);
     }
 
+    @Transactional
+    public void signupAdmin(MemberDTO memberDTO){
+        if(memberRepository.findByLoginId(memberDTO.getLoginId()).orElse(null) != null){
+            throw new DuplicateRequestException("There is a same name.");
+        }
+
+        Authority authority = Authority.builder()
+                .authorityName("ROLE_ADMIN")
+                .build();
+
+        Member member = Member.builder()
+                .loginId(memberDTO.getLoginId())
+                .password(passwordEncoder.encode(memberDTO.getPassword()))
+                .authorities(Collections.singleton(authority))
+                .joinDay(LocalDateTime.now())
+                .build();
+
+        memberRepository.save(member);
+    }
     @Transactional(readOnly = true)
     public MemberDTO getMemberWithAuthorities(String loginId){
         return MemberDTO.from(memberRepository.findOneWithAuthoritiesByLoginId(loginId).orElse(null));

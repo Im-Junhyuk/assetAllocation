@@ -95,4 +95,14 @@ public class TokenProvider implements InitializingBean {
 
         return false;
     }
+
+    public String extractLoginId(String token){
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getSubject();
+    }
 }

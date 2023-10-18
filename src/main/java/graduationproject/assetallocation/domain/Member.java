@@ -22,7 +22,7 @@ public class Member {
     @Id
     @GeneratedValue
     @Column(name = "MEMBER_ID")
-    private long id;
+    private Long id;
 
     @Column(name = "LOGIN_ID")
     private String loginId;

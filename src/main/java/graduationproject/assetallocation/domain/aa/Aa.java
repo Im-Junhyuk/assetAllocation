@@ -31,7 +31,7 @@ public abstract class Aa {
 
     private  LocalDateTime lastModifiedTime;
 
-    private long initialCash;
+    private Long initialCash;
 
     @Enumerated(EnumType.STRING)
     private RebalancingPeriod rebalancingPeriod;

@@ -51,9 +51,9 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests((authz) -> authz
-                .requestMatchers(new AntPathRequestMatcher("/user/*")).hasRole("USER")
-                .requestMatchers(new AntPathRequestMatcher("/admin/*")).hasRole("ADMIN")
-                .requestMatchers(new AntPathRequestMatcher("/*")).permitAll())
+                .requestMatchers(new AntPathRequestMatcher("/user/**")).hasRole("USER")
+                .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")
+                .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
 
                 .headers(headers ->
                         headers.frameOptions(options->

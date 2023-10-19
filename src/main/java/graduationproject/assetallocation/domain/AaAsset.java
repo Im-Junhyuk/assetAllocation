@@ -15,7 +15,7 @@ public class AaAsset {
     @Column(name = "AAASSET_ID")
     private Long id;
 
-    private int rate;
+    private Integer rate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "AA_ID")

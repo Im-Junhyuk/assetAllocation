@@ -4,6 +4,7 @@ import graduationproject.assetallocation.domain.Member;
 import graduationproject.assetallocation.domain.RebalancingPeriod;
 import graduationproject.assetallocation.domain.aa.Aa;
 import graduationproject.assetallocation.domain.aa.Saa;
+import graduationproject.assetallocation.domain.dto.AaAssetDTO;
 import graduationproject.assetallocation.domain.dto.SaaDTO;
 import graduationproject.assetallocation.jwt.TokenProvider;
 import graduationproject.assetallocation.service.AaService;
@@ -12,9 +13,12 @@ import graduationproject.assetallocation.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+
+import static graduationproject.assetallocation.domain.dto.AaAssetDTO.from;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,7 +38,7 @@ public class SAAController {
         String token = JwtUtil.getToken(request);
         String loginId = tokenProvider.extractLoginId(token);
         Member member = memberService.findByLoginId(loginId).get();
-        RebalancingPeriod rebalancingPeriodEnum = RebalancingPeriod.valueOf(saaDTO.getRebalancingPeriod());
+        RebalancingPeriod rebalancingPeriodEnum = saaDTO.getRebalancingPeriod();
 
         long saaId = aaService.createSAA(saaDTO.getName(), member, saaDTO.getAAAssets(),
                 saaDTO.getStartDay(), saaDTO.getEndDay(), saaDTO.getInitialCash(),
@@ -45,11 +49,9 @@ public class SAAController {
 
     // saaid로 1개 조회
     @GetMapping("/user/saa/{saaId}")
-    public Aa readById(@PathVariable Long saaId){
+    public ResponseEntity<SaaDTO> findOneById(@PathVariable Long saaId){
 
-        Map<String, Object> response = new HashMap<>();
-        Optional<Aa> findAa = aaService.findById(saaId);
-        return findAa.get();
+        return ResponseEntity.ok(SaaDTO.from(aaService.findById(saaId).get()));
     }
 
     // 정적, 동적 구분해서 id, name, createdDay, type만 모두 전달

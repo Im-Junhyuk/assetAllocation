@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class MemberController {
 
-    private final TokenProvider tokenProvider;
+    private final JwtUtil jwtUtil;
     private final MemberService memberService;
 
     @PostMapping("/signup")
@@ -77,7 +77,7 @@ public class MemberController {
     @GetMapping("/user/id")
     @PreAuthorize("hasRole('USER')")
     public String getMyId(HttpServletRequest request){
-        String token = JwtUtil.getToken(request);
-        return tokenProvider.extractLoginId(token);
+        String token = jwtUtil.getToken(request);
+        return jwtUtil.extractId(token).toString();
     }
 }

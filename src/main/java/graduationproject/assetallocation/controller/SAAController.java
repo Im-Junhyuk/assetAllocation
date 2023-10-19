@@ -27,20 +27,20 @@ public class SAAController {
 
     private final AaService aaService;
     private final MemberService memberService;
-    private final TokenProvider tokenProvider;
 
+    private final JwtUtil jwtUtil;
     // 새 자산배분 저장
     @PostMapping("/user/saa")
     public String saveSAA(@RequestBody SaaDTO saaDTO, HttpServletRequest request){
         log.info("createSAA Controller");
 
         // get user from token
-        String token = JwtUtil.getToken(request);
-        String loginId = tokenProvider.extractLoginId(token);
-        Member member = memberService.findByLoginId(loginId).get();
+        String token = jwtUtil.getToken(request);
+
         RebalancingPeriod rebalancingPeriodEnum = saaDTO.getRebalancingPeriod();
 
-        long saaId = aaService.createSAA(saaDTO.getName(), member, saaDTO.getAAAssets(),
+        long saaId = aaService.createSAA(saaDTO.getName(), memberService.findById(jwtUtil.extractId(token)).get(),
+                saaDTO.getAAAssets(),
                 saaDTO.getStartDay(), saaDTO.getEndDay(), saaDTO.getInitialCash(),
                 rebalancingPeriodEnum);
         //save(sAA);
@@ -60,6 +60,13 @@ public class SAAController {
         return "ok";
     }
 
+    @PutMapping("/user/saa/{saaId}")
+    public String updateOne(@PathVariable Long saaId){
+
+        return "ok";
+    }
+
+
     // 정적, 동적 구분해서 id, name, createdDay, type만 모두 전달
     @GetMapping("/user/aas")
     public List<Aa> findAllByUser(HttpServletRequest request){
@@ -69,7 +76,6 @@ public class SAAController {
         Member member = memberService.findByLoginId(loginId).get();
         return aaService.findByMember(member);
     }
-
 
     @GetMapping("/admin/saas")
     public List<Aa> findAll(){

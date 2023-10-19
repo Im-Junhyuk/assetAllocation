@@ -13,9 +13,12 @@ import graduationproject.assetallocation.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
+import javax.naming.AuthenticationException;
 import java.util.*;
 
 import static graduationproject.assetallocation.domain.dto.AaAssetDTO.from;
@@ -49,15 +52,26 @@ public class SAAController {
 
     // saaid로 1개 조회
     @GetMapping("/user/saa/{saaId}")
-    public ResponseEntity<SaaDTO> findOneById(@PathVariable Long saaId){
+    public ResponseEntity<SaaDTO> findOneById(@PathVariable Long saaId,
+                                              @RequestHeader("Authorization") String auth) {
+        Aa aa = aaService.findById(saaId).get();
+        // check authorization
+        String token = jwtUtil.getToken(auth);
+        if (aa.getMember().getId() != jwtUtil.extractId(token))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
 
-        return ResponseEntity.ok(SaaDTO.from(aaService.findById(saaId).get()));
+        return ResponseEntity.ok(SaaDTO.from(aa));
     }
 
     @DeleteMapping("/user/saa/{saaId}")
-    public String deleteOneById(@PathVariable Long saaId){
+    public ResponseEntity<String> deleteOneById(@PathVariable Long saaId,
+                                @RequestHeader("Authorization") String auth) {
+        // check auth
+        if (aaService.findById(saaId).get().getMember().getId() != jwtUtil.getIdFromAuth(auth))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("forbidden");
+
         aaService.deleteById(saaId);
-        return "ok";
+        return ResponseEntity.ok("success");
     }
 
     @PutMapping("/user/saa/{saaId}")
@@ -94,12 +108,4 @@ public class SAAController {
         aaService.save(saa);
     }
 
-    @PutMapping("/user/saa/{saaId}")
-    public void updateById(@PathVariable Long saaId){
-
-    }
-    @PostMapping("saa/delete/{saaId}")
-    public void deleteById(@PathVariable Long saaId){
-        aaService.deleteById(saaId);
-    }
 }

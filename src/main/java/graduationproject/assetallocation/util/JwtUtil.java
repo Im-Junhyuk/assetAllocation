@@ -21,8 +21,18 @@ public class JwtUtil {
         return null;
     }
 
+    public String getToken(String auth){
+        if(auth != null && auth.startsWith("Bearer ")){
+            return auth.substring(7);
+        }
+        return null;
+    }
     public Long extractId(String token){
         String loginId = tokenProvider.extractLoginId(token);
         return memberRepository.findByLoginId(loginId).get().getId();
+    }
+
+    public Long getIdFromAuth(String auth){
+        return extractId(getToken(auth));
     }
 }

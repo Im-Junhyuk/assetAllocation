@@ -4,6 +4,7 @@ import com.sun.jdi.request.DuplicateRequestException;
 import graduationproject.assetallocation.domain.Authority;
 import graduationproject.assetallocation.domain.Member;
 import graduationproject.assetallocation.domain.dto.MemberDTO;
+import graduationproject.assetallocation.domain.dto.MemberListDTO;
 import graduationproject.assetallocation.exception.NotFoundMemberException;
 import graduationproject.assetallocation.repository.MemberRepository;
 import graduationproject.assetallocation.util.SecurityUtil;
@@ -13,10 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -76,6 +74,17 @@ public class MemberService {
                         .flatMap(memberRepository::findOneWithAuthoritiesByLoginId)
                         .orElseThrow(() -> new NotFoundMemberException("Member not found"))
         );
+    }
+
+    @Transactional(readOnly = true)
+    public List<MemberListDTO> getAllMember(){
+        List<Member> members = memberRepository.findAll();
+
+        List<MemberListDTO> memberListDTOS = new ArrayList<>();
+        for (Member member : members){
+            memberListDTOS.add(MemberListDTO.from(member));
+        }
+        return memberListDTOS;
     }
 
     public void saveMember(Member member){

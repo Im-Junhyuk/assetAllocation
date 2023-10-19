@@ -5,8 +5,11 @@ import graduationproject.assetallocation.domain.RebalancingPeriod;
 import graduationproject.assetallocation.domain.aa.Aa;
 import graduationproject.assetallocation.domain.aa.Saa;
 import graduationproject.assetallocation.domain.dto.SaaDTO;
+import graduationproject.assetallocation.jwt.TokenProvider;
 import graduationproject.assetallocation.service.AaService;
 import graduationproject.assetallocation.service.MemberService;
+import graduationproject.assetallocation.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -20,55 +23,54 @@ public class SAAController {
 
     private final AaService aaService;
     private final MemberService memberService;
+    private final TokenProvider tokenProvider;
 
-//    private final AARepository aARepository;
+    // 새 자산배분 저장
+    @PostMapping("/user/saa")
+    public String saveSAA(@RequestBody SaaDTO saaDTO, HttpServletRequest request){
+        log.info("createSAA Controller");
 
-    @GetMapping("/saa/read/{id}")
-    public Map<String, Object> findById(@PathVariable Long id){
+        // get user from token
+        String token = JwtUtil.getToken(request);
+        String loginId = tokenProvider.extractLoginId(token);
+        Member member = memberService.findByLoginId(loginId).get();
+        RebalancingPeriod rebalancingPeriodEnum = RebalancingPeriod.valueOf(saaDTO.getRebalancingPeriod());
+
+        long saaId = aaService.createSAA(saaDTO.getName(), member, saaDTO.getAAAssets(),
+                saaDTO.getStartDay(), saaDTO.getEndDay(), saaDTO.getInitialCash(),
+                rebalancingPeriodEnum);
+        //save(sAA);
+        return String.valueOf(saaId);
+    }
+
+    // saaid로 1개 조회
+    @GetMapping("/user/saa/{saaId}")
+    public Aa readById(@PathVariable Long saaId){
 
         Map<String, Object> response = new HashMap<>();
-        Optional<Aa> findAA = aaService.findById(id);
-        if (findAA.isPresent()){
-            response.put("1", findAA.get());
-        }
-        else {
-            response.put("0", "0");
-        }
-
-        return response;
+        Optional<Aa> findAa = aaService.findById(saaId);
+        return findAa.get();
     }
 
-    @GetMapping("/saas/{userId}")
-    public List<Aa> findAllByUserId(@PathVariable Long userId){
-        Member member = memberService.findById(userId).get();
-        List<Aa> list = aaService.findByMember(member);
-        return list;
+    // 정적, 동적 구분해서 id, name, createdDay, type만 모두 전달
+    @GetMapping("/user/aas")
+    public List<Aa> findAllByUser(HttpServletRequest request){
+        String token = JwtUtil.getToken(request);
+        String loginId = tokenProvider.extractLoginId(token);
+
+        Member member = memberService.findByLoginId(loginId).get();
+        return aaService.findByMember(member);
     }
 
 
-    @GetMapping("/saas")
+    @GetMapping("/admin/saas")
     public List<Aa> findAll(){
         List<Aa> list = aaService.findAll();
         return list;
     }
-    @PostMapping("/saa/save")
-    public String saveSAA(@RequestBody SaaDTO sAADTO){
-        log.info("createSAA Controller");
 
-        Member member = memberService.findById(sAADTO.getMemberId()).get();
-        RebalancingPeriod rebalancingPeriodEnum = RebalancingPeriod.valueOf(sAADTO.getRebalancingPeriod());
-        long sAAId = aaService.createSAA(sAADTO.getName(), member, sAADTO.getAAAssets(),
-                sAADTO.getStartDay(), sAADTO.getEndDay(), sAADTO.getInitialCash(),
-                rebalancingPeriodEnum);
-        //save(sAA);
-        return Long.toString(sAAId);
-    }
 
-    @PostMapping("/saa/check")
-    public SaaDTO check(@RequestBody SaaDTO saaDTO){
-        return saaDTO;
-    }
-
+    // service
     private void save(Saa saa) {
         if (saa.getId() == null){
             aaService.setCreateTime(saa);
@@ -79,8 +81,12 @@ public class SAAController {
         aaService.save(saa);
     }
 
-    @PostMapping("saa/delete/{id}")
-    public void deleteOne(@PathVariable Long id){
-        aaService.deleteById(id);
+    @PutMapping("/user/saa/{saaId}")
+    public void updateById(@PathVariable Long saaId){
+
+    }
+    @PostMapping("saa/delete/{saaId}")
+    public void deleteById(@PathVariable Long saaId){
+        aaService.deleteById(saaId);
     }
 }

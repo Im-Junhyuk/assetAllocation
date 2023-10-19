@@ -2,6 +2,7 @@ package graduationproject.assetallocation.controller;
 
 import graduationproject.assetallocation.domain.Asset;
 import graduationproject.assetallocation.domain.dto.MemberDTO;
+import graduationproject.assetallocation.domain.dto.MemberListDTO;
 import graduationproject.assetallocation.repository.AssetRepository;
 import graduationproject.assetallocation.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -33,5 +35,10 @@ public class AdminController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<MemberDTO> getMemberInfo(@PathVariable String userId){
         return ResponseEntity.ok(memberService.getMemberWithAuthorities(userId));
+    }
+
+    @GetMapping("/admin/users")
+    public ResponseEntity<List<MemberListDTO>> getAllMember(){
+        return ResponseEntity.ok(memberService.getAllMember());
     }
 }

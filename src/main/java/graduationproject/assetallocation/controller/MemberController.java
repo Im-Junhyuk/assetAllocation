@@ -6,6 +6,7 @@ import graduationproject.assetallocation.jwt.JwtFilter;
 import graduationproject.assetallocation.jwt.TokenProvider;
 import graduationproject.assetallocation.repository.MemberJpaRepository;
 import graduationproject.assetallocation.service.MemberService;
+import graduationproject.assetallocation.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
@@ -57,14 +58,6 @@ public class MemberController {
 //        return "ok";
 //    }
 
-    private static String getToken(HttpServletRequest request) {
-        String header = request.getHeader("Authorization");
-        if(header != null && header.startsWith("Bearer ")){
-            return header.substring(7);
-        }
-        return null;
-    }
-
     @GetMapping("/{memberId}")
     public Member findOneById(@PathVariable Long memberId){
         return memberService.findById(memberId).get();
@@ -84,7 +77,7 @@ public class MemberController {
     @GetMapping("/user/id")
     @PreAuthorize("hasRole('USER')")
     public String getMyId(HttpServletRequest request){
-        String token = getToken(request);
+        String token = JwtUtil.getToken(request);
         return tokenProvider.extractLoginId(token);
     }
 }

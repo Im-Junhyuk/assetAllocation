@@ -54,6 +54,12 @@ public class SAAController {
         return ResponseEntity.ok(SaaDTO.from(aaService.findById(saaId).get()));
     }
 
+    @DeleteMapping("/user/saa/{saaId}")
+    public String deleteOneById(@PathVariable Long saaId){
+        aaService.deleteById(saaId);
+        return "ok";
+    }
+
     // 정적, 동적 구분해서 id, name, createdDay, type만 모두 전달
     @GetMapping("/user/aas")
     public List<Aa> findAllByUser(HttpServletRequest request){

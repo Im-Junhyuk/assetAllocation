@@ -70,10 +70,9 @@ public class SAAController {
     // 정적, 동적 구분해서 id, name, createdDay, type만 모두 전달
     @GetMapping("/user/aas")
     public List<Aa> findAllByUser(HttpServletRequest request){
-        String token = JwtUtil.getToken(request);
-        String loginId = tokenProvider.extractLoginId(token);
-
-        Member member = memberService.findByLoginId(loginId).get();
+        String token = jwtUtil.getToken(request);
+        Long id = jwtUtil.extractId(token);
+        Member member = memberService.findById(id).get();
         return aaService.findByMember(member);
     }
 

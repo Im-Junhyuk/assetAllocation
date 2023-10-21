@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +28,9 @@ public abstract class Aa {
 
     private String name;
 
-    private LocalDateTime createdTime;
+    private LocalDate createdTime;
 
-    private  LocalDateTime lastModifiedTime;
+    private LocalDate lastModifiedTime;
 
     private Long initialCash;
 
@@ -43,7 +44,7 @@ public abstract class Aa {
     @OneToMany(mappedBy = "aa", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AaAsset> aaAssets = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
@@ -58,11 +59,11 @@ public abstract class Aa {
         aaAsset.setAa(this);
     }
     public void setCreatedTime(){
-        this.setCreatedTime(LocalDateTime.now());
+        this.setCreatedTime(LocalDate.now());
     }
 
     public void setLastModifiedTime(){
-        this.setLastModifiedTime(LocalDateTime.now());
+        this.setLastModifiedTime(LocalDate.now());
     }
 
     public static Aa createAA() {

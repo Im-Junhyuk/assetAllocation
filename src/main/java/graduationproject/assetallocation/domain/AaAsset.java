@@ -1,10 +1,14 @@
 package graduationproject.assetallocation.domain;
 
 import graduationproject.assetallocation.domain.aa.Aa;
+import graduationproject.assetallocation.domain.dto.AaAssetDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -41,4 +45,5 @@ public class AaAsset {
         aAAsset.setAssetName(asset.getName());
         aAAsset.setRate(rate);
     }
+
 }

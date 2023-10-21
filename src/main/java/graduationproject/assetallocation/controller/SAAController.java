@@ -3,10 +3,7 @@ package graduationproject.assetallocation.controller;
 import graduationproject.assetallocation.domain.Member;
 import graduationproject.assetallocation.domain.RebalancingPeriod;
 import graduationproject.assetallocation.domain.aa.Aa;
-import graduationproject.assetallocation.domain.aa.Saa;
-import graduationproject.assetallocation.domain.dto.AaAssetDTO;
 import graduationproject.assetallocation.domain.dto.SaaDTO;
-import graduationproject.assetallocation.jwt.TokenProvider;
 import graduationproject.assetallocation.service.AaService;
 import graduationproject.assetallocation.service.MemberService;
 import graduationproject.assetallocation.util.JwtUtil;
@@ -16,12 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
 
-import javax.naming.AuthenticationException;
 import java.util.*;
-
-import static graduationproject.assetallocation.domain.dto.AaAssetDTO.from;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,8 +35,9 @@ public class SAAController {
 
         RebalancingPeriod rebalancingPeriodEnum = saaDTO.getRebalancingPeriod();
 
-        long saaId = aaService.createSAA(saaDTO.getName(), memberService.findById(jwtUtil.extractId(token)).get(),
-                saaDTO.getAAAssets(),
+        long saaId = aaService.createSAA(saaDTO.getName(),
+                memberService.findById(jwtUtil.extractId(token)).get(),
+                saaDTO.getAaAssets(),
                 saaDTO.getStartDay(), saaDTO.getEndDay(), saaDTO.getInitialCash(),
                 rebalancingPeriodEnum);
         //save(sAA);
@@ -56,9 +50,12 @@ public class SAAController {
                                               @RequestHeader("Authorization") String auth) {
         Aa aa = aaService.findById(saaId).get();
         // check authorization
-        String token = jwtUtil.getToken(auth);
-        if (aa.getMember().getId() != jwtUtil.extractId(token))
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        if (isaBoolean(saaId, auth))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+//        String token = jwtUtil.getToken(auth);
+//        if (aa.getMember().getId() != jwtUtil.extractId(token))
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
 
         return ResponseEntity.ok(SaaDTO.from(aa));
     }
@@ -67,17 +64,29 @@ public class SAAController {
     public ResponseEntity<String> deleteOneById(@PathVariable Long saaId,
                                 @RequestHeader("Authorization") String auth) {
         // check auth
-        if (aaService.findById(saaId).get().getMember().getId() != jwtUtil.getIdFromAuth(auth))
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("forbidden");
+        if (isaBoolean(saaId, auth))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized");
 
         aaService.deleteById(saaId);
         return ResponseEntity.ok("success");
     }
 
-    @PutMapping("/user/saa/{saaId}")
-    public String updateOne(@PathVariable Long saaId){
+    private boolean isaBoolean(Long saaId, String auth) {
+        return !Objects.equals(aaService.findById(saaId).get().getMember().getId(), jwtUtil.getIdFromAuth(auth));
+    }
 
-        return "ok";
+    @PutMapping("/user/saa/{saaId}")
+    public ResponseEntity<SaaDTO> updateOne(@PathVariable Long saaId,
+                            @RequestBody SaaDTO saaDTO,
+                            @RequestHeader("Authorization") String auth){
+
+        log.info("saa update id={}", saaDTO.getId());
+        //check auth
+        if (isaBoolean(saaId, auth))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        // update saa
+        return ResponseEntity.ok(aaService.updateSaa(saaDTO));
     }
 
 
@@ -94,18 +103,6 @@ public class SAAController {
     public List<Aa> findAll(){
         List<Aa> list = aaService.findAll();
         return list;
-    }
-
-
-    // service
-    private void save(Saa saa) {
-        if (saa.getId() == null){
-            aaService.setCreateTime(saa);
-        }
-        else{
-            aaService.setLastModifiedTime(saa);;
-        }
-        aaService.save(saa);
     }
 
 }

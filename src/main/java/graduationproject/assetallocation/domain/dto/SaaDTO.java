@@ -14,8 +14,9 @@ import java.util.stream.Collectors;
 @Builder
 public class SaaDTO {
 
+    Long id;
     String name;
-    List<AaAssetDTO> aAAssets;
+    List<AaAssetDTO> aaAssets;
     String startDay;
     String endDay;
     Long initialCash;
@@ -27,8 +28,9 @@ public class SaaDTO {
         }
 
         return SaaDTO.builder()
+                .id(saa.getId())
                 .name(saa.getName())
-                .aAAssets(saa.getAaAssets().stream()
+                .aaAssets(saa.getAaAssets().stream()
                         .map((s)-> AaAssetDTO.from(s))
                         .collect(Collectors.toList()))
                 .startDay(saa.getStartDay())

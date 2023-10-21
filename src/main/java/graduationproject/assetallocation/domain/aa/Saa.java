@@ -3,17 +3,21 @@ package graduationproject.assetallocation.domain.aa;
 import graduationproject.assetallocation.domain.AaAsset;
 import graduationproject.assetallocation.domain.Member;
 import graduationproject.assetallocation.domain.RebalancingPeriod;
+import graduationproject.assetallocation.domain.dto.AaAssetDTO;
+import graduationproject.assetallocation.domain.dto.SaaDTO;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @DiscriminatorValue("S")
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Saa extends Aa {
 
     // 생성 메소드
@@ -34,5 +38,20 @@ public class Saa extends Aa {
         saa.setCreatedTime();
 
         return saa;
+    }
+
+    public static Saa updateFromDTO(Saa saa, SaaDTO saaDTO, List<AaAsset> aaAssets){
+        saa.setName(saaDTO.getName());
+        saa.setStartDay(saaDTO.getStartDay());
+        saa.setEndDay(saaDTO.getEndDay());
+        saa.setInitialCash(saaDTO.getInitialCash());
+        saa.setRebalancingPeriod(saaDTO.getRebalancingPeriod());
+        saa.setLastModifiedTime();
+
+        saa.getAaAssets().clear();
+        saa.getAaAssets().addAll(aaAssets);
+
+        return saa;
+
     }
 }

@@ -35,7 +35,7 @@ public class Saa extends Aa {
         saa.setEndDay(endDay);
         saa.setInitialCash(initialCash);
         saa.setRebalancingPeriod(rebalancingPeriod);
-        saa.setCreatedTime();
+        saa.setCreatedDay();
 
         return saa;
     }
@@ -46,7 +46,7 @@ public class Saa extends Aa {
         saa.setEndDay(saaDTO.getEndDay());
         saa.setInitialCash(saaDTO.getInitialCash());
         saa.setRebalancingPeriod(saaDTO.getRebalancingPeriod());
-        saa.setLastModifiedTime();
+        saa.setLastModifiedDay();
 
         saa.getAaAssets().clear();
         saa.getAaAssets().addAll(aaAssets);

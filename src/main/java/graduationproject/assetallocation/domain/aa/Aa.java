@@ -1,7 +1,6 @@
 package graduationproject.assetallocation.domain.aa;
 
 import graduationproject.assetallocation.domain.AaAsset;
-import graduationproject.assetallocation.domain.Authority;
 import graduationproject.assetallocation.domain.Member;
 import graduationproject.assetallocation.domain.RebalancingPeriod;
 import jakarta.persistence.*;
@@ -11,10 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter @Setter
@@ -58,11 +55,11 @@ public abstract class Aa {
         this.aaAssets.add(aaAsset);
         aaAsset.setAa(this);
     }
-    public void setCreatedTime(){
+    public void setCreatedDay(){
         this.setCreatedTime(LocalDate.now());
     }
 
-    public void setLastModifiedTime(){
+    public void setLastModifiedDay(){
         this.setLastModifiedTime(LocalDate.now());
     }
 

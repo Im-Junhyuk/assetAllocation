@@ -45,13 +45,6 @@ public class AaService {
 
     public List<Aa> findAll(){ return aaRepository.findAll();}
 
-    public void setCreateTime(Aa aA){
-        aA.setCreatedTime();
-    }
-
-    public void setLastModifiedTime(Aa aA){
-        aA.setLastModifiedTime();
-    }
 
     private List<AaAsset> createAaAssetList(List<AaAssetDTO> aaAssetDTOList){
         List<AaAsset> aaAssets = new ArrayList<>();

@@ -4,6 +4,7 @@ import graduationproject.assetallocation.domain.RebalancingPeriod;
 import graduationproject.assetallocation.domain.aa.Aa;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,8 @@ public class SaaDTO {
     String endDay;
     Long initialCash;
     RebalancingPeriod rebalancingPeriod;
+    LocalDate createdDay;
+    LocalDate lastModifiedDay;
 
     public static SaaDTO from(Aa saa){
         if (saa == null){
@@ -37,6 +40,7 @@ public class SaaDTO {
                 .endDay(saa.getEndDay())
                 .initialCash(saa.getInitialCash())
                 .rebalancingPeriod(saa.getRebalancingPeriod())
+                .createdDay(saa.getCreatedTime())
                 .build();
     }
 

@@ -25,9 +25,9 @@ public abstract class Aa {
 
     private String name;
 
-    private LocalDate createdTime;
+    private LocalDate createdDay;
 
-    private LocalDate lastModifiedTime;
+    private LocalDate lastModifiedDay;
 
     private Long initialCash;
 
@@ -56,11 +56,11 @@ public abstract class Aa {
         aaAsset.setAa(this);
     }
     public void setCreatedDay(){
-        this.setCreatedTime(LocalDate.now());
+        this.createdDay = LocalDate.now();
     }
 
     public void setLastModifiedDay(){
-        this.setLastModifiedTime(LocalDate.now());
+        this.lastModifiedDay = LocalDate.now();
     }
 
     public static Aa createAA() {

@@ -40,7 +40,7 @@ public class SaaDTO {
                 .endDay(saa.getEndDay())
                 .initialCash(saa.getInitialCash())
                 .rebalancingPeriod(saa.getRebalancingPeriod())
-                .createdDay(saa.getCreatedTime())
+                .createdDay(saa.getCreatedDay())
                 .build();
     }
 

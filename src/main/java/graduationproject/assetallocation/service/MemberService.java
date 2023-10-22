@@ -24,7 +24,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void signup(MemberDTO memberDTO){
+    public Member signup(MemberDTO memberDTO){
         if(memberRepository.findByLoginId(memberDTO.getLoginId()).orElse(null) != null){
             throw new DuplicateRequestException("There is a same name.");
         }
@@ -40,7 +40,7 @@ public class MemberService {
                 .joinDay(LocalDateTime.now())
                 .build();
 
-        memberRepository.save(member);
+        return memberRepository.save(member);
     }
 
     @Transactional

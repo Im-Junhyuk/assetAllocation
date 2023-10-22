@@ -2,7 +2,9 @@ package graduationproject.assetallocation.domain.dto;
 
 import graduationproject.assetallocation.domain.RebalancingPeriod;
 import graduationproject.assetallocation.domain.aa.Aa;
+import graduationproject.assetallocation.domain.aa.Saa;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,36 +13,27 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class SaaDTO {
+@SuperBuilder
+public class SaaDTO extends AaDTO{
 
-    Long id;
-    String name;
-    List<AaAssetDTO> aaAssets;
-    String startDay;
-    String endDay;
-    Long initialCash;
-    RebalancingPeriod rebalancingPeriod;
-    LocalDate createdDay;
-    LocalDate lastModifiedDay;
 
-    public static SaaDTO from(Aa saa){
-        if (saa == null){
+    public static AaDTO from(Aa aa){
+        if (aa == null){
             return null;
         }
 
         return SaaDTO.builder()
-                .id(saa.getId())
-                .name(saa.getName())
-                .aaAssets(saa.getAaAssets().stream()
+                .id(aa.getId())
+                .name(aa.getName())
+                .aaAssets(aa.getAaAssets().stream()
                         .map((s)-> AaAssetDTO.from(s))
                         .collect(Collectors.toList()))
-                .startDay(saa.getStartDay())
-                .endDay(saa.getEndDay())
-                .initialCash(saa.getInitialCash())
-                .rebalancingPeriod(saa.getRebalancingPeriod())
-                .createdDay(saa.getCreatedDay())
+                .startDay(aa.getStartDay())
+                .endDay(aa.getEndDay())
+                .initialCash(aa.getInitialCash())
+                .rebalancingPeriod(aa.getRebalancingPeriod())
+                .createdDay(aa.getCreatedDay())
+                .lastModifiedDay(aa.getLastModifiedDay())
                 .build();
     }
 

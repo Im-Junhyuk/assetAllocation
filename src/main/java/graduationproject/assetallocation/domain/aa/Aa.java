@@ -3,11 +3,13 @@ package graduationproject.assetallocation.domain.aa;
 import graduationproject.assetallocation.domain.AaAsset;
 import graduationproject.assetallocation.domain.Member;
 import graduationproject.assetallocation.domain.RebalancingPeriod;
+import graduationproject.assetallocation.domain.dto.AaDTO;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
+@SuperBuilder
 public abstract class Aa {
     @Id @GeneratedValue
     @Column(name = "AA_ID")
@@ -51,9 +54,14 @@ public abstract class Aa {
         this.member = member;
     }
 
-    public void addAaAsset(AaAsset aaAsset){
-        this.aaAssets.add(aaAsset);
+//    public void addAaAsset(AaAsset aaAsset){
+//        this.aaAssets.add(aaAsset);
+//        aaAsset.setAa(this);
+//    }
+    public Aa addAaAsset(AaAsset aaAsset){
+        this.getAaAssets().add(aaAsset);
         aaAsset.setAa(this);
+        return this;
     }
     public void setCreatedDay(){
         this.createdDay = LocalDate.now();
@@ -63,10 +71,9 @@ public abstract class Aa {
         this.lastModifiedDay = LocalDate.now();
     }
 
-    public static Aa createAA() {
-        return null;
-    }
-}
+    public abstract Aa updateFromDTO(AaDTO saaDTO, List<AaAsset> aaAssets);
 
+    public abstract AaDTO toDTO();
+}
 
 

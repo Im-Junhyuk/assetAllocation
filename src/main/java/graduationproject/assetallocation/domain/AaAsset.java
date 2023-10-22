@@ -3,6 +3,7 @@ package graduationproject.assetallocation.domain;
 import graduationproject.assetallocation.domain.aa.Aa;
 import graduationproject.assetallocation.domain.dto.AaAssetDTO;
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,7 +33,7 @@ public class AaAsset {
     private String assetName;
 
     // creation method
-    public static AaAsset createAaAsset(Asset asset, int rate){
+    public static AaAsset createAaAsset(Asset asset, Integer rate){
         AaAsset aaAsset = new AaAsset();
         setAsset(asset, rate, aaAsset);
 
@@ -40,10 +41,23 @@ public class AaAsset {
     }
 
     // relation method
-    private static void setAsset(Asset asset, int rate, AaAsset aAAsset) {
+    private static void setAsset(Asset asset, Integer rate, AaAsset aAAsset) {
         aAAsset.setAsset(asset);
         aAAsset.setAssetName(asset.getName());
         aAAsset.setRate(rate);
     }
 
+//    public static List<AaAsset> from(List<AaAssetDTO> aaAssetDTOList){
+//        List<AaAsset> aaAssetList = new ArrayList<>();
+//        for (AaAssetDTO aaAssetDTO : aaAssetDTOList) {
+//            aaAssetList.add(createAaAsset(aaAssetDTO.getAssetName(), aaAssetDTO.getRate()))
+//        }
+//    }
+    public AaAssetDTO toDTO(){
+        return AaAssetDTO.builder()
+                .assetName(this.getAssetName())
+                .rate(this.getRate())
+                .build();
+    }
 }
+

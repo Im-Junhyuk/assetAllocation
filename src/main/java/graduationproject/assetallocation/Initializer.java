@@ -6,6 +6,7 @@ import graduationproject.assetallocation.domain.dto.MemberDTO;
 import graduationproject.assetallocation.repository.AssetRepository;
 import graduationproject.assetallocation.repository.MemberRepository;
 import graduationproject.assetallocation.service.MemberService;
+import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Component;
 
 
@@ -14,12 +15,14 @@ public class Initializer {
     private final AssetRepository assetRepository;
     private final MemberRepository memberRepository;
     private final MemberService memberService;
+    private final EntityManager em;
 
     public Initializer(AssetRepository assetRepository, MemberRepository memberRepository
-    , MemberService memberService){
+    , MemberService memberService, EntityManager em){
         this.assetRepository = assetRepository;
         this.memberRepository = memberRepository;
         this.memberService = memberService;
+        this.em = em;
 
         String[] assetArray = {"SPY", "QQQ","VT", "VEU", "EFA", "EEM", "VWO", "IWD", "IFW"
         , "IWM", "IWN", "IWO", "MTUM","SCZ", "XLE", "XLB", "XLI", "XLY", "XLP", "XLV", "XLF"
@@ -39,6 +42,8 @@ public class Initializer {
 //                .build();
 //
 //        memberService.signup(memberDTO);
+
+        em.clear();
     }
 
 

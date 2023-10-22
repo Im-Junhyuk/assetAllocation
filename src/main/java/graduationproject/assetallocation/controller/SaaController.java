@@ -3,6 +3,8 @@ package graduationproject.assetallocation.controller;
 import graduationproject.assetallocation.domain.Member;
 import graduationproject.assetallocation.domain.RebalancingPeriod;
 import graduationproject.assetallocation.domain.aa.Aa;
+import graduationproject.assetallocation.domain.aa.Saa;
+import graduationproject.assetallocation.domain.dto.AaDTO;
 import graduationproject.assetallocation.domain.dto.SaaDTO;
 import graduationproject.assetallocation.service.AaService;
 import graduationproject.assetallocation.service.MemberService;
@@ -19,7 +21,7 @@ import java.util.*;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class SAAController {
+public class SaaController {
 
     private final AaService aaService;
     private final MemberService memberService;
@@ -35,7 +37,7 @@ public class SAAController {
 
         RebalancingPeriod rebalancingPeriodEnum = saaDTO.getRebalancingPeriod();
 
-        long saaId = aaService.createSAA(saaDTO.getName(),
+        long saaId = aaService.createSaa(saaDTO.getName(),
                 memberService.findById(jwtUtil.extractId(token)).get(),
                 saaDTO.getAaAssets(),
                 saaDTO.getStartDay(), saaDTO.getEndDay(), saaDTO.getInitialCash(),
@@ -46,9 +48,9 @@ public class SAAController {
 
     // saaid로 1개 조회
     @GetMapping("/user/saa/{saaId}")
-    public ResponseEntity<SaaDTO> findOneById(@PathVariable Long saaId,
-                                              @RequestHeader("Authorization") String auth) {
-        Aa aa = aaService.findById(saaId).get();
+    public ResponseEntity<AaDTO> findOneById(@PathVariable Long saaId,
+                                             @RequestHeader("Authorization") String auth) {
+        Saa saa = (Saa) aaService.findById(saaId).get();
         // check authorization
         if (isaBoolean(saaId, auth))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
@@ -57,7 +59,7 @@ public class SAAController {
 //        if (aa.getMember().getId() != jwtUtil.extractId(token))
 //            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
 
-        return ResponseEntity.ok(SaaDTO.from(aa));
+        return ResponseEntity.ok(SaaDTO.from(saa));
     }
 
     @DeleteMapping("/user/saa/{saaId}")
@@ -76,7 +78,7 @@ public class SAAController {
     }
 
     @PutMapping("/user/saa/{saaId}")
-    public ResponseEntity<SaaDTO> updateOne(@PathVariable Long saaId,
+    public ResponseEntity<AaDTO> updateOne(@PathVariable Long saaId,
                             @RequestBody SaaDTO saaDTO,
                             @RequestHeader("Authorization") String auth){
 

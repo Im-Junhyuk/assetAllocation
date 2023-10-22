@@ -3,13 +3,11 @@ package graduationproject.assetallocation.domain.aa;
 import graduationproject.assetallocation.domain.AaAsset;
 import graduationproject.assetallocation.domain.Member;
 import graduationproject.assetallocation.domain.RebalancingPeriod;
-import graduationproject.assetallocation.domain.dto.AaAssetDTO;
-import graduationproject.assetallocation.domain.dto.SaaDTO;
+import graduationproject.assetallocation.domain.dto.AaDTO;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -21,9 +19,9 @@ import java.util.List;
 public class Saa extends Aa {
 
     // 생성 메소드
-    public static Saa createAA(String name, Member member, List<AaAsset> aaAssets,
-                               String startDay, String endDay, Long initialCash,
-                               RebalancingPeriod rebalancingPeriod){
+    public static Aa createAa(String name, Member member, List<AaAsset> aaAssets,
+                              String startDay, String endDay, Long initialCash,
+                              RebalancingPeriod rebalancingPeriod){
         Saa saa = new Saa();
         saa.setName(name);
         saa.setMember(member);
@@ -39,19 +37,27 @@ public class Saa extends Aa {
 
         return saa;
     }
+    @Override
+    public AaDTO toDTO() {
+        return null;
+    }
 
-    public static Saa updateFromDTO(Saa saa, SaaDTO saaDTO, List<AaAsset> aaAssets){
-        saa.setName(saaDTO.getName());
-        saa.setStartDay(saaDTO.getStartDay());
-        saa.setEndDay(saaDTO.getEndDay());
-        saa.setInitialCash(saaDTO.getInitialCash());
-        saa.setRebalancingPeriod(saaDTO.getRebalancingPeriod());
-        saa.setLastModifiedDay();
+    public Aa updateFromDTO(AaDTO saaDTO, List<AaAsset> aaAssets) {
 
-        saa.getAaAssets().clear();
-        saa.getAaAssets().addAll(aaAssets);
+        this.setName(saaDTO.getName());
+        this.setStartDay(saaDTO.getStartDay());
+        this.setEndDay(saaDTO.getEndDay());
+        this.setInitialCash(saaDTO.getInitialCash());
+        this.setRebalancingPeriod(saaDTO.getRebalancingPeriod());
+        this.setLastModifiedDay();
 
-        return saa;
+        this.getAaAssets().clear();
+        this.getAaAssets().addAll(aaAssets);
+        for(AaAsset aaAsset: aaAssets){
+            this.addAaAsset(aaAsset);
+        }
+
+        return this;
 
     }
 }

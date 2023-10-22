@@ -1,15 +1,26 @@
 package graduationproject.assetallocation;
 
-import graduationproject.assetallocation.domain.Asset;
-import graduationproject.assetallocation.domain.Authority;
+import graduationproject.assetallocation.domain.*;
+import graduationproject.assetallocation.domain.aa.Aa;
+import graduationproject.assetallocation.domain.dto.AaDTO;
+import graduationproject.assetallocation.domain.dto.DaaDTO;
 import graduationproject.assetallocation.domain.dto.MemberDTO;
+import graduationproject.assetallocation.repository.AaRepository;
 import graduationproject.assetallocation.repository.AssetRepository;
 import graduationproject.assetallocation.repository.AuthorityJPARepository;
 import graduationproject.assetallocation.repository.MemberRepository;
 import graduationproject.assetallocation.service.MemberService;
+import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import static graduationproject.assetallocation.domain.aa.Daa.createDaa;
+import static graduationproject.assetallocation.domain.aa.Saa.createAa;
 
 @Component
 @AllArgsConstructor
@@ -19,6 +30,8 @@ public class CommandLineRunnerInitializer implements CommandLineRunner {
     private final MemberRepository memberRepository;
     private final MemberService memberService;
     private final AuthorityJPARepository authorityJPARepository;
+    private final AaRepository aaRepository;
+    private final EntityManager em;
     @Override
     public void run(String... args) throws Exception {
         String[] assetArray = {"SPY", "QQQ","VT", "VEU", "EFA", "EEM", "VWO", "IWD", "IFW"
@@ -56,6 +69,29 @@ public class CommandLineRunnerInitializer implements CommandLineRunner {
                 .password("user2")
                 .build();
 
-        memberService.signup(memberDTO3);
+        Member signup3 = memberService.signup(memberDTO3);
+
+        // aaAsset
+        List<AaAsset> aaAssets = new ArrayList<>();
+        AaAsset aaAsset1 = AaAsset.createAaAsset(assetRepository.findByName("SPY").get(), null);
+        AaAsset aaAsset2 = AaAsset.createAaAsset(assetRepository.findByName("QQQ").get(), null);
+        aaAssets.add(aaAsset2);
+        aaAssets.add(aaAsset1);
+
+        // aaDTO
+
+        // aa init
+        Aa aa = createDaa(DaaDTO.builder().lastModifiedDay(LocalDate.ofEpochDay(2000-10-10))
+                .createdDay(LocalDate.ofEpochDay(1999-10-20))
+                .initialCash(2000L)
+                .rebalancingPeriod(RebalancingPeriod.Q)
+                .strategyType("abs")
+                        .build(),
+                aaAssets,
+                signup3);
+
+        aaRepository.save(aa);
+
+        em.clear();
     }
 }

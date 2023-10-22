@@ -5,22 +5,23 @@ import graduationproject.assetallocation.domain.Asset;
 import graduationproject.assetallocation.domain.Member;
 import graduationproject.assetallocation.domain.RebalancingPeriod;
 import graduationproject.assetallocation.domain.aa.Aa;
+import graduationproject.assetallocation.domain.aa.Daa;
 import graduationproject.assetallocation.domain.aa.Saa;
 import graduationproject.assetallocation.domain.dto.AaAssetDTO;
+import graduationproject.assetallocation.domain.dto.AaDTO;
 import graduationproject.assetallocation.domain.dto.SaaDTO;
 import graduationproject.assetallocation.repository.AaAssetRepository;
 import graduationproject.assetallocation.repository.AaRepository;
 import graduationproject.assetallocation.repository.AssetRepository;
+import graduationproject.assetallocation.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static graduationproject.assetallocation.domain.aa.Saa.updateFromDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +30,7 @@ public class AaService {
     private final AaRepository aaRepository;
     private final AaAssetRepository aaAssetRepository;
     private final AssetRepository assetRepository;
+    private final MemberRepository memberRepository;
 
 
     public void deleteById(Long aAId){
@@ -56,7 +58,7 @@ public class AaService {
         return aaAssets;
     }
 
-    public Long createSAA(String name, Member member, List<AaAssetDTO> aaAssetDTOs, String startDay,
+    public Long createSaa(String name, Member member, List<AaAssetDTO> aaAssetDTOs, String startDay,
                           String endDay, Long initialCash, RebalancingPeriod rebalancingPeriod){
 
         log.info("AAService createSAA");
@@ -65,13 +67,13 @@ public class AaService {
 
 
         // create AA
-        Aa aA = Saa.createAA(name, member, aaAssets, startDay, endDay, initialCash, rebalancingPeriod);
+        Aa aA = Saa.createAa(name, member, aaAssets, startDay, endDay, initialCash, rebalancingPeriod);
 
         return aaRepository.save(aA).getId();
     }
 
     //@Transactional
-    public SaaDTO updateSaa(SaaDTO saaDTO) {
+    public AaDTO updateSaa(SaaDTO saaDTO) {
 
         Saa saa = (Saa) aaRepository.findById(saaDTO.getId()).get();
 
@@ -80,8 +82,22 @@ public class AaService {
         //update saa
 
         log.info("before clear");
-        Saa updatesaa = updateFromDTO(saa, saaDTO, aaAssetList);
+        Aa updatesaa = saa.updateFromDTO(saaDTO, aaAssetList);
         aaRepository.save(updatesaa);
         return SaaDTO.from(updatesaa);
+    }
+
+    public AaDTO createDaa(Long memberId, AaDTO aaDTO){
+        // find member
+        Member member = memberRepository.findById(memberId).get();
+
+        // aaAsset
+        List<AaAsset> aaAssetList= createAaAssetList(aaDTO.getAaAssets());
+
+        // aa
+        Daa daa = Daa.createDaa(aaDTO, aaAssetList, member);
+
+        // save and return
+        return aaRepository.save(daa).toDTO();
     }
 }

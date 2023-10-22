@@ -81,16 +81,16 @@ public class CommandLineRunnerInitializer implements CommandLineRunner {
         // aaDTO
 
         // aa init
-        Aa aa = createDaa(DaaDTO.builder().lastModifiedDay(LocalDate.ofEpochDay(2000-10-10))
-                .createdDay(LocalDate.ofEpochDay(1999-10-20))
-                .initialCash(2000L)
-                .rebalancingPeriod(RebalancingPeriod.Q)
-                .strategyType("abs")
-                        .build(),
-                aaAssets,
-                signup3);
-
-        aaRepository.save(aa);
+//        Aa aa = createDaa(DaaDTO.builder().lastModifiedDay(LocalDate.ofEpochDay(2000-10-10))
+//                .createdDay(LocalDate.ofEpochDay(1999-10-20))
+//                .initialCash(2000L)
+//                .rebalancingPeriod(RebalancingPeriod.Q)
+//                .strategyType("abs")
+//                        .build(),
+//                aaAssets,
+//                signup3);
+//
+//        aaRepository.save(aa);
 
         em.clear();
     }

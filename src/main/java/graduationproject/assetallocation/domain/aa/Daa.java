@@ -25,7 +25,7 @@ public class Daa extends Aa {
 
     public static Daa createDaa(AaDTO aaDTO, List<AaAsset> aaAssets, Member member) {
         DaaDTO daaDTO = (DaaDTO) aaDTO;
-        return Daa.builder()
+        return (Daa) Daa.builder()
                 .id(daaDTO.getId())
                 .name(daaDTO.getName())
                 .aaAssets(aaAssets)
@@ -36,8 +36,10 @@ public class Daa extends Aa {
                 .rebalancingPeriod(aaDTO.getRebalancingPeriod())
                 .member(member)
                 .strategyType(daaDTO.getStrategyType())
-                .build();
+                .build()
+                .addAaAssetList(aaAssets);
     }
+
 
     @Override
     public Aa updateFromDTO(AaDTO saaDTO, List<AaAsset> aaAssets) {

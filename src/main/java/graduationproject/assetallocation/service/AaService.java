@@ -95,7 +95,7 @@ public class AaService {
         List<AaAsset> aaAssetList= createAaAssetList(aaDTO.getAaAssets());
 
         // aa
-        Daa daa = Daa.createDaa(aaDTO, aaAssetList, member);
+        Daa daa = (Daa) Daa.createDaa(aaDTO, aaAssetList, member);
 
         // save and return
         return aaRepository.save(daa).toDTO();

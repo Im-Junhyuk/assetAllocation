@@ -63,6 +63,18 @@ public abstract class Aa {
         aaAsset.setAa(this);
         return this;
     }
+    public Aa addAaAssetList(List<AaAsset> aaAssets){
+        for (AaAsset aaAsset:aaAssets){
+//            this.getAaAssets().add(aaAsset);
+            aaAsset.setAa(this);
+        }
+        return this;
+    }
+
+    public Aa setRelation(List<AaAsset> aaAssets){
+        return this.addAaAssetList(aaAssets);
+    }
+
     public void setCreatedDay(){
         this.createdDay = LocalDate.now();
     }

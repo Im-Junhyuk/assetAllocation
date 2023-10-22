@@ -2,6 +2,7 @@ package graduationproject.assetallocation.repository;
 
 import graduationproject.assetallocation.domain.Member;
 import graduationproject.assetallocation.domain.aa.Aa;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -20,4 +21,8 @@ public interface AaRepository extends JpaRepository<Aa, Long> {
     void deleteById(Long id);
 
     List<Aa> findAll();
+
+    @EntityGraph(attributePaths = {"aaAssets"})
+    Optional<Aa> findOneWithAaAssetsById(Long id);
+
 }

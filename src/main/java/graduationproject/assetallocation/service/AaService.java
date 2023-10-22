@@ -38,7 +38,7 @@ public class AaService {
     }
 
     public Optional<Aa> findById(Long aAId){
-        return aaRepository.findById(aAId);
+        return aaRepository.findOneWithAaAssetsById(aAId);
     }
 
     public List<Aa> findByMember(Member member){ return aaRepository.findByMember(member);}
@@ -67,7 +67,7 @@ public class AaService {
 
 
         // create AA
-        Aa aA = Saa.createAa(name, member, aaAssets, startDay, endDay, initialCash, rebalancingPeriod);
+        Aa aA = Saa.createSaa(name, member, aaAssets, startDay, endDay, initialCash, rebalancingPeriod);
 
         return aaRepository.save(aA).getId();
     }
@@ -83,8 +83,8 @@ public class AaService {
 
         log.info("before clear");
         Aa updatesaa = saa.updateFromDTO(saaDTO, aaAssetList);
-        aaRepository.save(updatesaa);
-        return SaaDTO.from(updatesaa);
+
+        return SaaDTO.from(aaRepository.save(updatesaa));
     }
 
     public AaDTO createDaa(Long memberId, AaDTO aaDTO){

@@ -1,17 +1,21 @@
 package graduationproject.assetallocation.controller;
 
 import graduationproject.assetallocation.domain.Member;
+import graduationproject.assetallocation.domain.aa.Aa;
+import graduationproject.assetallocation.domain.aa.Saa;
 import graduationproject.assetallocation.domain.dto.AaDTO;
 import graduationproject.assetallocation.domain.dto.DaaDTO;
+import graduationproject.assetallocation.domain.dto.SaaDTO;
 import graduationproject.assetallocation.service.AaService;
 import graduationproject.assetallocation.service.MemberService;
 import graduationproject.assetallocation.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController
 @Slf4j
@@ -30,10 +34,28 @@ public class DaaController {
     }
 
     //find
+    @GetMapping("/user/daa/{daaId}")
+    public ResponseEntity<AaDTO> findOneById(@PathVariable Long daaId,
+                                             @RequestHeader("Authorization") String auth) {
+        Aa daa = aaService.findById(daaId).get();
+        // check authorization
+        if (isaBoolean(daaId, auth))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
+//        String token = jwtUtil.getToken(auth);
+//        if (aa.getMember().getId() != jwtUtil.extractId(token))
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+
+        return ResponseEntity.ok(daa.toDTO());
+    }
     //delete
 
     //update
 
     //find all
+
+    private boolean isaBoolean(Long saaId, String auth) {
+        return !Objects.equals(aaService.findById(saaId).get().getMember().getId(), jwtUtil.getIdFromAuth(auth));
+    }
+
 }

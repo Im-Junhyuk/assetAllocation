@@ -19,9 +19,9 @@ import java.util.List;
 public class Saa extends Aa {
 
     // 생성 메소드
-    public static Aa createAa(String name, Member member, List<AaAsset> aaAssets,
-                              String startDay, String endDay, Long initialCash,
-                              RebalancingPeriod rebalancingPeriod){
+    public static Aa createSaa(String name, Member member, List<AaAsset> aaAssets,
+                               String startDay, String endDay, Long initialCash,
+                               RebalancingPeriod rebalancingPeriod){
         Saa saa = new Saa();
         saa.setName(name);
         saa.setMember(member);
@@ -52,7 +52,7 @@ public class Saa extends Aa {
         this.setLastModifiedDay();
 
         this.getAaAssets().clear();
-        this.getAaAssets().addAll(aaAssets);
+//        this.getAaAssets().addAll(aaAssets);
         for(AaAsset aaAsset: aaAssets){
             this.addAaAsset(aaAsset);
         }

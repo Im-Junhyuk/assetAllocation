@@ -9,6 +9,7 @@ import graduationproject.assetallocation.domain.aa.Daa;
 import graduationproject.assetallocation.domain.aa.Saa;
 import graduationproject.assetallocation.domain.dto.AaAssetDTO;
 import graduationproject.assetallocation.domain.dto.AaDTO;
+import graduationproject.assetallocation.domain.dto.DaaDTO;
 import graduationproject.assetallocation.domain.dto.SaaDTO;
 import graduationproject.assetallocation.repository.AaAssetRepository;
 import graduationproject.assetallocation.repository.AaRepository;
@@ -79,9 +80,8 @@ public class AaService {
 
         //update AaAsset
         List<AaAsset> aaAssetList = createAaAssetList(saaDTO.getAaAssets());
-        //update saa
 
-        log.info("before clear");
+        //update saa
         Aa updatesaa = saa.updateFromDTO(saaDTO, aaAssetList);
 
         return SaaDTO.from(aaRepository.save(updatesaa));
@@ -99,5 +99,22 @@ public class AaService {
 
         // save and return
         return aaRepository.save(daa).toDTO();
+    }
+
+    public DaaDTO updateDaa(DaaDTO daaDTO) {
+        return null;
+    }
+
+    public AaDTO updateAa(AaDTO aaDTO) {
+
+        Aa aa = aaRepository.findById(aaDTO.getId()).get();
+
+        //update AaAsset
+        List<AaAsset> aaAssetList = createAaAssetList(aaDTO.getAaAssets());
+
+        //update saa
+        Aa updateAa = aa.updateFromDTO(aaDTO, aaAssetList);
+
+        return aaRepository.save(updateAa).toDTO();
     }
 }

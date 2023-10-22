@@ -49,8 +49,31 @@ public class DaaController {
         return ResponseEntity.ok(daa.toDTO());
     }
     //delete
+    @DeleteMapping("/user/daa/{daaId}")
+    public ResponseEntity<String> deleteOneById(@PathVariable Long daaId,
+                                                @RequestHeader("Authorization") String auth) {
+        // check auth
+        if (isaBoolean(daaId, auth))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized");
+
+        aaService.deleteById(daaId);
+        return ResponseEntity.ok("success");
+    }
 
     //update
+    @PutMapping("/user/daa/{daaId}")
+    public ResponseEntity<AaDTO> updateOne(@PathVariable Long daaId,
+                                           @RequestBody DaaDTO daaDTO,
+                                           @RequestHeader("Authorization") String auth){
+
+        log.info("daa update id={}", daaDTO.getId());
+        //check auth
+        if (isaBoolean(daaId, auth))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        // update saa
+        return ResponseEntity.ok(aaService.updateAa(daaDTO));
+    }
 
     //find all
 

@@ -42,8 +42,20 @@ public class Daa extends Aa {
 
 
     @Override
-    public Aa updateFromDTO(AaDTO saaDTO, List<AaAsset> aaAssets) {
-        return null;
+    public Aa updateFromDTO(AaDTO daaDTO, List<AaAsset> aaAssets) {
+        this.setName(daaDTO.getName());
+        this.setLastModifiedDay(LocalDate.now());
+        this.setStartDay(daaDTO.getStartDay());
+        this.setEndDay(daaDTO.getEndDay());
+        this.setInitialCash(daaDTO.getInitialCash());
+        this.setRebalancingPeriod(daaDTO.getRebalancingPeriod());
+        this.setStrategyType((((DaaDTO) daaDTO).getStrategyType()));
+
+        this.getAaAssets().clear();
+        this.getAaAssets().addAll(aaAssets);
+        this.addAaAssetList(aaAssets);
+
+        return this;
     }
 
     public AaDTO toDTO(){

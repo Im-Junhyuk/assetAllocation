@@ -42,6 +42,7 @@ public class Saa extends Aa {
         return null;
     }
 
+    @Override
     public Aa updateFromDTO(AaDTO saaDTO, List<AaAsset> aaAssets) {
 
         this.setName(saaDTO.getName());
@@ -52,11 +53,12 @@ public class Saa extends Aa {
         this.setLastModifiedDay();
 
         this.getAaAssets().clear();
-//        this.getAaAssets().addAll(aaAssets);
-        for(AaAsset aaAsset: aaAssets){
-            this.addAaAsset(aaAsset);
-        }
-
+        this.getAaAssets().addAll(aaAssets);
+//        for(AaAsset aaAsset: aaAssets){
+//            this.addAaAsset(aaAsset);
+//        }
+        //this.setAaAssets(aaAssets);
+        this.addAaAssetList(aaAssets);
         return this;
 
     }

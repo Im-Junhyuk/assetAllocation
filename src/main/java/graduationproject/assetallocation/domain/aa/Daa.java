@@ -74,4 +74,9 @@ public class Daa extends Aa {
                 .strategyType(this.strategyType)
                 .build();
     }
+
+    @Override
+    public String type() {
+        return "dynamic";
+    }
 }

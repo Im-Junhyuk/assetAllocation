@@ -4,6 +4,7 @@ import graduationproject.assetallocation.domain.AaAsset;
 import graduationproject.assetallocation.domain.Member;
 import graduationproject.assetallocation.domain.RebalancingPeriod;
 import graduationproject.assetallocation.domain.dto.AaDTO;
+import graduationproject.assetallocation.domain.dto.AaListDTO;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -83,9 +84,22 @@ public abstract class Aa {
         this.lastModifiedDay = LocalDate.now();
     }
 
+
     public abstract Aa updateFromDTO(AaDTO saaDTO, List<AaAsset> aaAssets);
 
     public abstract AaDTO toDTO();
+
+    public abstract String type();
+
+    public AaListDTO toListDTO() {
+//        String type = (this instanceof Saa) ? "static" : ((this instanceof Daa) ? "dynamic" : "null");
+        return AaListDTO.builder()
+                .id(this.getId())
+                .name(this.getName())
+                .createdDay(this.getCreatedDay())
+                .type(this.type())
+                .build();
+    }
 }
 
 

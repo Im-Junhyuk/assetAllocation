@@ -2,20 +2,12 @@ package graduationproject.assetallocation.controller;
 
 import graduationproject.assetallocation.domain.Member;
 import graduationproject.assetallocation.domain.dto.MemberDTO;
-import graduationproject.assetallocation.jwt.JwtFilter;
-import graduationproject.assetallocation.jwt.TokenProvider;
-import graduationproject.assetallocation.repository.MemberJpaRepository;
 import graduationproject.assetallocation.service.MemberService;
 import graduationproject.assetallocation.util.JwtUtil;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -78,6 +70,6 @@ public class MemberController {
     @PreAuthorize("hasRole('USER')")
     public String getMyId(HttpServletRequest request){
         String token = jwtUtil.getToken(request);
-        return jwtUtil.extractId(token).toString();
+        return jwtUtil.extractIdFromToken(token).toString();
     }
 }

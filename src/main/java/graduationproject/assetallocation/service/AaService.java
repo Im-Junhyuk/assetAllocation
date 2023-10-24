@@ -7,10 +7,7 @@ import graduationproject.assetallocation.domain.RebalancingPeriod;
 import graduationproject.assetallocation.domain.aa.Aa;
 import graduationproject.assetallocation.domain.aa.Daa;
 import graduationproject.assetallocation.domain.aa.Saa;
-import graduationproject.assetallocation.domain.dto.AaAssetDTO;
-import graduationproject.assetallocation.domain.dto.AaDTO;
-import graduationproject.assetallocation.domain.dto.DaaDTO;
-import graduationproject.assetallocation.domain.dto.SaaDTO;
+import graduationproject.assetallocation.domain.dto.*;
 import graduationproject.assetallocation.repository.AaAssetRepository;
 import graduationproject.assetallocation.repository.AaRepository;
 import graduationproject.assetallocation.repository.AssetRepository;
@@ -22,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -116,5 +114,12 @@ public class AaService {
         Aa updateAa = aa.updateFromDTO(aaDTO, aaAssetList);
 
         return aaRepository.save(updateAa).toDTO();
+    }
+
+    public List<AaListDTO> findAaList(Long memberId){
+        return aaRepository.findAllByMember(memberRepository.findById(memberId).get())
+                .stream()
+                .map((s) -> s.toListDTO())
+                .collect(Collectors.toList());
     }
 }

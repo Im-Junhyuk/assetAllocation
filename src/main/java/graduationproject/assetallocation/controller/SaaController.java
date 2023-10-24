@@ -1,6 +1,5 @@
 package graduationproject.assetallocation.controller;
 
-import graduationproject.assetallocation.domain.Member;
 import graduationproject.assetallocation.domain.RebalancingPeriod;
 import graduationproject.assetallocation.domain.aa.Aa;
 import graduationproject.assetallocation.domain.aa.Saa;
@@ -38,7 +37,7 @@ public class SaaController {
         RebalancingPeriod rebalancingPeriodEnum = saaDTO.getRebalancingPeriod();
 
         long saaId = aaService.createSaa(saaDTO.getName(),
-                memberService.findById(jwtUtil.extractId(token)).get(),
+                memberService.findById(jwtUtil.extractIdFromToken(token)).get(),
                 saaDTO.getAaAssets(),
                 saaDTO.getStartDay(), saaDTO.getEndDay(), saaDTO.getInitialCash(),
                 rebalancingPeriodEnum);
@@ -92,14 +91,14 @@ public class SaaController {
     }
 
 
-    // 정적, 동적 구분해서 id, name, createdDay, type만 모두 전달
-    @GetMapping("/user/aas")
-    public List<Aa> findAllByUser(HttpServletRequest request){
-        String token = jwtUtil.getToken(request);
-        Long id = jwtUtil.extractId(token);
-        Member member = memberService.findById(id).get();
-        return aaService.findByMember(member);
-    }
+//    // 정적, 동적 구분해서 id, name, createdDay, type만 모두 전달
+//    @GetMapping("/user/aas")
+//    public List<Aa> findAllByUser(HttpServletRequest request){
+//        String token = jwtUtil.getToken(request);
+//        Long id = jwtUtil.extractId(token);
+//        Member member = memberService.findById(id).get();
+//        return aaService.findByMember(member);
+//    }
 
     @GetMapping("/admin/saas")
     public List<Aa> findAll(){

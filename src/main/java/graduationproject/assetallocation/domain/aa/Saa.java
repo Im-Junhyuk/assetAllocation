@@ -43,6 +43,13 @@ public class Saa extends Aa {
     }
 
     @Override
+    public String type() {
+        return "static";
+    }
+
+
+
+    @Override
     public Aa updateFromDTO(AaDTO saaDTO, List<AaAsset> aaAssets) {
 
         this.setName(saaDTO.getName());

@@ -27,12 +27,12 @@ public class JwtUtil {
         }
         return null;
     }
-    public Long extractId(String token){
+    public Long extractIdFromToken(String token){
         String loginId = tokenProvider.extractLoginId(token);
         return memberRepository.findByLoginId(loginId).get().getId();
     }
 
     public Long getIdFromAuth(String auth){
-        return extractId(getToken(auth));
+        return extractIdFromToken(getToken(auth));
     }
 }

@@ -116,7 +116,7 @@ public class AaService {
         return aaRepository.save(updateAa).toDTO();
     }
 
-    public List<AaListDTO> findAaList(Long memberId){
+    public List<AaListDTO> findAaListById(Long memberId){
         return aaRepository.findAllByMember(memberRepository.findById(memberId).get())
                 .stream()
                 .map((s) -> s.toListDTO())

@@ -19,14 +19,14 @@ public class AaController {
     private final JwtUtil jwtUtil;
 
     @GetMapping("/user/aas")
-    public ResponseEntity<List<AaListDTO>> findAaList(@RequestHeader("Authorization") String auth){
+    public ResponseEntity<List<AaListDTO>> findAaListById(@RequestHeader("Authorization") String auth){
 
 //        if (isaBoolean(saaId, auth))
 //            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 //        return ResponseEntity.ok(aaService.findAll().stream()
 //                .map(s -> s.toListDTO())
 //                .collect(Collectors.toList()));
-        return ResponseEntity.ok(aaService.findAaList(jwtUtil.getIdFromAuth(auth)));
+        return ResponseEntity.ok(aaService.findAaListById(jwtUtil.getIdFromAuth(auth)));
     }
 
     private boolean isaBoolean(Long saaId, String auth) {

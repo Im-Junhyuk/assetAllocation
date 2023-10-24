@@ -24,7 +24,7 @@ public class AdminController {
     private final AssetRepository assetRepository;
     private final MemberService memberService;
 
-    @GetMapping("/assets")
+    @GetMapping("/admin/assets")
     @PreAuthorize("hasRole('ADMIN')")
     List<Asset> findAll(){
         log.info("findAllAsset");

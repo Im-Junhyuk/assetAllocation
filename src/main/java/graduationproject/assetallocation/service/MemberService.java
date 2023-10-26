@@ -6,15 +6,18 @@ import graduationproject.assetallocation.domain.Member;
 import graduationproject.assetallocation.domain.dto.MemberDTO;
 import graduationproject.assetallocation.domain.dto.MemberListDTO;
 import graduationproject.assetallocation.exception.NotFoundMemberException;
+import graduationproject.assetallocation.jwt.TokenProvider;
 import graduationproject.assetallocation.repository.MemberRepository;
 import graduationproject.assetallocation.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +25,8 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final TokenProvider tokenProvider;
+    private final RedisTemplate<String, Object> redisTemplate;
     @Transactional
     public Member signup(MemberDTO memberDTO){
         if(memberRepository.findByLoginId(memberDTO.getLoginId()).orElse(null) != null){
@@ -99,10 +103,16 @@ public class MemberService {
     public Optional<Member> findByLoginId(String loginId){
         return memberRepository.findByLoginId(loginId);
     }
-    public void deleteMember(Long memberId){
+    public void deleteById(Long memberId){
 
         memberRepository.deleteById(memberId);
     }
 
 
+    public String logout(Long id, String token) {
+        Long expiration = tokenProvider.getExpiration(token);
+        redisTemplate.opsForValue()
+                .set(token, "logout", expiration, TimeUnit.MILLISECONDS);
+        return id.toString();
+    }
 }

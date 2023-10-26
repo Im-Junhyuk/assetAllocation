@@ -8,8 +8,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -22,6 +24,7 @@ public class JwtFilter extends GenericFilterBean {
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
     private final TokenProvider tokenProvider;
+    private final RedisTemplate<String, Object> redisTemplate;
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
@@ -29,9 +32,13 @@ public class JwtFilter extends GenericFilterBean {
         String requestURL = httpServletRequest.getRequestURI();
 
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)){
-            Authentication authentication = tokenProvider.getAuthentication(jwt);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.info("{}'s authentication info was stored, uri: {}", authentication.getName(), requestURL);
+            String isLogout = (String)redisTemplate.opsForValue().get(jwt);
+            if(ObjectUtils.isEmpty(isLogout)) {
+                Authentication authentication = tokenProvider.getAuthentication(jwt);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                log.info("{}'s authentication info was stored, uri: {}", authentication.getName(), requestURL);
+            }
         } else {
             log.info("no valid token, uri : {}", requestURL);
         }

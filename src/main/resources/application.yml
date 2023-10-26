@@ -6,7 +6,7 @@ spring: #띄어쓰기 없음
     password:
     driver-class-name: org.h2.Driver
 
-#  sql:
+  #  sql:
 #    init:
 #      mode: always
 
@@ -18,6 +18,11 @@ spring: #띄어쓰기 없음
       hibernate: #띄어쓰기 6칸
         # show_sql: true #띄어쓰기 8칸
         format_sql: true #띄어쓰기 8칸
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
 #    defer-datasource-initialization: true
 
 logging.level: #띄어쓰기 없음

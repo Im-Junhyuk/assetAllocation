@@ -6,12 +6,14 @@ import graduationproject.assetallocation.service.MemberService;
 import graduationproject.assetallocation.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class MemberController {
 
     private final JwtUtil jwtUtil;
@@ -72,4 +74,19 @@ public class MemberController {
         String token = jwtUtil.getToken(request);
         return jwtUtil.extractIdFromToken(token).toString();
     }
+
+    @DeleteMapping("/user")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<?> deleteUser(@RequestHeader("Authorization") String auth){
+        String token = jwtUtil.getToken(auth);
+        Long id = jwtUtil.getIdFromAuth(auth);
+        // delete
+        memberService.deleteById(id);
+
+        // logout
+        memberService.logout(id, token);
+
+        return ResponseEntity.ok(null);
+    }
+
 }

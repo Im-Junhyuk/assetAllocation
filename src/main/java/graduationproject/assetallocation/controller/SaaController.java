@@ -20,6 +20,7 @@ import java.util.*;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@RequestMapping("/api")
 public class SaaController {
 
     private final AaService aaService;

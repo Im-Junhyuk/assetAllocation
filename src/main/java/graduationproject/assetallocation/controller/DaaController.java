@@ -20,6 +20,7 @@ import java.util.Objects;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class DaaController {
     private final AaService aaService;
     private final JwtUtil jwtUtil;

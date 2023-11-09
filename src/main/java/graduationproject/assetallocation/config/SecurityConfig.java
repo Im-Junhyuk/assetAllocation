@@ -38,33 +38,48 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
 
-                .exceptionHandling((exceptionHandling)-> exceptionHandling
+                .cors(AbstractHttpConfigurer::disable)
+
+                .exceptionHandling((exceptionHandling) -> exceptionHandling
                         .accessDeniedHandler(jwtAccessDeniedHandler)
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
 
-                .headers((headers)->headers
+                .headers((headers) -> headers
                         .frameOptions(frameOptionsConfig -> frameOptionsConfig.sameOrigin()))
 
-                .sessionManagement((SessionManagementConfigurer)-> SessionManagementConfigurer
+                .sessionManagement((SessionManagementConfigurer) -> SessionManagementConfigurer
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests((authz) -> authz
-                .requestMatchers(new AntPathRequestMatcher("/user/**")).hasRole("USER")
-                .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")
-                .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
+                        .requestMatchers(new AntPathRequestMatcher("/api/user/**")).hasRole("USER")
+                        .requestMatchers(new AntPathRequestMatcher("/api/admin/**")).hasRole("ADMIN")
+                        .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
 
                 .headers(headers ->
-                        headers.frameOptions(options->
-                        options.sameOrigin())
+                        headers.frameOptions(options ->
+                                options.sameOrigin())
                 )
 
                 .apply(new JwtSecurityConfig(tokenProvider, redisTemplate));
 
         return http.build();
-
     }
+    //    @Bean
+//    public CorsConfigurationSource corsConfigSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.addAllowedOriginPattern("*");
+//        configuration.addAllowedMethod("*");
+//        configuration.addAllowedHeader("*");
+//        configuration.setAllowCredentials(true);
+//        configuration.setMaxAge(3600Ls);
+//        configuration.addExposedHeader("*");
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 }

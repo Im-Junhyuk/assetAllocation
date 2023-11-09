@@ -21,7 +21,8 @@ spring: #띄어쓰기 없음
 
   data:
     redis:
-      host: localhost
+      host: aa-login-redis.funqgt.ng.0001.apn2.cache.amazonaws.com
+      #host: localhost
       port: 6379
 #    defer-datasource-initialization: true
 

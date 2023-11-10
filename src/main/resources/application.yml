@@ -15,9 +15,10 @@ spring: #띄어쓰기 없음
     hibernate: #띄어쓰기 4칸
       ddl-auto: create #띄어쓰기 6칸
     properties: #띄어쓰기 4칸
-      hibernate: #띄어쓰기 6칸
+      hibernate:  #띄어쓰기 6칸
         # show_sql: true #띄어쓰기 8칸
         format_sql: true #띄어쓰기 8칸
+        dialect: org.hibernate.dialect.MySQL8Dialect
 
   data:
     redis:

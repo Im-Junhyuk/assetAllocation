@@ -1,21 +1,19 @@
 package graduationproject.assetallocation.domain.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Builder
 @Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class BacktestResultDTO {
-    Long returns;
 
-    Long volatility;
-
-    Long sharpe;
-
+    Double returns;
+    Double volatility;
+    Double sharpe;
     String graph;
 }
-//        "returns": 정수값,
-//        "volatility": 정수값,
-//        "sharpe": 정수값,
-//        "graph":"base64_encoded_string"
+//"returns": ,
+//        "volatility": ,
+//        "sharpe": ,
+//        "graph":"base6

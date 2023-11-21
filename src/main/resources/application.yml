@@ -10,11 +10,11 @@ spring: #띄어쓰기 없음
 #    init:
 #      mode: always
 
-  datasource:
-    url: jdbc:mysql://aa-mysql.cokiqdyyyk1g.ap-northeast-2.rds.amazonaws.com:3306/aa_mysql?characterEncoding=UTF-8
-    username: admin
-    password: password
-    driver-class-name: com.mysql.cj.jdbc.Driver
+#  datasource:
+#    url: jdbc:mysql://aa-mysql.cokiqdyyyk1g.ap-northeast-2.rds.amazonaws.com:3306/aa_mysql?characterEncoding=UTF-8
+#    username: admin
+#    password: password
+#    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa: #띄어쓰기 2칸
     hibernate: #띄어쓰기 4칸

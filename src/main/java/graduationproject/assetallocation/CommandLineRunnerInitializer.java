@@ -37,6 +37,7 @@ public class CommandLineRunnerInitializer implements CommandLineRunner {
                 , "XLK", "XLU", "VGK", "EZU", "EWJ" // STOCK LIST
                 , "IEF", "TLT", "TIP", "LQD", "HYG", "BNDX", "EMB", "BWX" // BOND LIST
                 , "GSC", "PDBC", "GLD", "VNQ", "IYR", "SCHH", "REM", "RWX" // ALTERNATIVE
+                , "EDV", "LTPZ"
         };
 
         for (String assetName : assetArray){
